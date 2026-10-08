@@ -1,3 +1,6 @@
+# extraneous folders 
+agent-helpers/
+
 *.class
 
 # Mobile Tools for Java (J2ME)
