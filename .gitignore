@@ -1,5 +1,6 @@
 # extraneous folders 
 agent-helpers/
+extra-data/
 
 *.class
 
