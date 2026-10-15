@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE network SYSTEM "http://www.matsim.org/files/dtd/network_v2.dtd">
+<network>
+
+<!-- ====================================================================== -->
+
+	<nodes>
+		<node id="1" x="-2927.2752303956213" y="7507.588216752934" >
+		</node>
+		<node id="10" x="214.55063304103902" y="-4.41189037103736" >
+		</node>
+		<node id="11" x="-1026.8668521951422" y="-131.19634573057462" >
+		</node>
+		<node id="12" x="-3710.4433347382474" y="-152.32671764071137" >
+		</node>
+		<node id="13" x="-4777.534297914062" y="-6071.618509326264" >
+		</node>
+		<node id="14" x="-1364.9551898715158" y="-1779.6110955191855" >
+		</node>
+		<node id="15" x="209.26827981885887" y="-1769.043129691116" >
+		</node>
+		<node id="16" x="1831.0361524083296" y="159.34821394656532" >
+		</node>
+		<node id="17" x="1831.0361524083296" y="-448.1674916744339" >
+		</node>
+		<node id="18" x="3225.6499408404297" y="159.34821394656532" >
+		</node>
+		<node id="19" x="1836.31850563051" y="-1747.907198034187" >
+		</node>
+		<node id="2" x="1841.600858853835" y="6727.562478037211" >
+		</node>
+		<node id="20" x="1846.8840180494522" y="-3333.2966634012937" >
+		</node>
+		<node id="21" x="251.52952352233754" y="-3872.415257693363" >
+		</node>
+		<node id="22" x="230.39930465674405" y="-3386.149835933943" >
+		</node>
+		<node id="23" x="-1354.3904834260104" y="-3386.149835933943" >
+		</node>
+		<node id="24" x="-1217.0420458712144" y="-4686.458860317815" >
+		</node>
+		<node id="3" x="-3240.2889127304034" y="3074.655688764256" >
+		</node>
+		<node id="4" x="-1053.280230256353" y="2039.6555354549407" >
+		</node>
+		<node id="5" x="203.9859265966788" y="2081.9040478338516" >
+		</node>
+		<node id="6" x="1809.9051275692993" y="4700.762512369314" >
+		</node>
+		<node id="7" x="3278.476696962851" y="2060.780347619075" >
+		</node>
+		<node id="8" x="1831.0361524083296" y="1891.7851861556542" >
+		</node>
+		<node id="9" x="230.39930465674405" y="365.3623903890809" >
+		</node>
+	</nodes>
+
+<!-- ====================================================================== -->
+
+	<links capperiod="01:00:00" effectivecellsize="7.5" effectivelanewidth="3.75">
+		<link id="10_11" from="10" to="11" length="5000.0" freespeed="16.666666666666668" capacity="10000.0" permlanes="5.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">10-&gt;11</attribute>
+			</attributes>
+		</link>
+		<link id="10_15" from="10" to="15" length="6000.0" freespeed="16.666666666666668" capacity="13512.00155" permlanes="7.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">10-&gt;15</attribute>
+			</attributes>
+		</link>
+		<link id="10_16" from="10" to="16" length="4000.0" freespeed="16.666666666666668" capacity="4854.917717" permlanes="2.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">10-&gt;16</attribute>
+			</attributes>
+		</link>
+		<link id="10_17" from="10" to="17" length="8000.0" freespeed="16.666666666666668" capacity="4993.510694" permlanes="2.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">10-&gt;17</attribute>
+			</attributes>
+		</link>
+		<link id="10_9" from="10" to="9" length="3000.0" freespeed="16.666666666666668" capacity="13915.78842" permlanes="7.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">10-&gt;9</attribute>
+			</attributes>
+		</link>
+		<link id="11_10" from="11" to="10" length="5000.0" freespeed="16.666666666666668" capacity="10000.0" permlanes="5.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">11-&gt;10</attribute>
+			</attributes>
+		</link>
+		<link id="11_12" from="11" to="12" length="6000.0" freespeed="16.666666666666668" capacity="4908.82673" permlanes="2.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">11-&gt;12</attribute>
+			</attributes>
+		</link>
+		<link id="11_14" from="11" to="14" length="4000.0" freespeed="16.666666666666668" capacity="4876.508287" permlanes="2.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">11-&gt;14</attribute>
+			</attributes>
+		</link>
+		<link id="11_4" from="11" to="4" length="6000.0" freespeed="16.666666666666668" capacity="4908.82673" permlanes="2.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">11-&gt;4</attribute>
+			</attributes>
+		</link>
+		<link id="12_11" from="12" to="11" length="6000.0" freespeed="16.666666666666668" capacity="4908.82673" permlanes="2.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">12-&gt;11</attribute>
+			</attributes>
+		</link>
+		<link id="12_13" from="12" to="13" length="3000.0" freespeed="16.666666666666668" capacity="25900.20064" permlanes="13.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">12-&gt;13</attribute>
+			</attributes>
+		</link>
+		<link id="12_3" from="12" to="3" length="4000.0" freespeed="16.666666666666668" capacity="23403.47319" permlanes="12.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">12-&gt;3</attribute>
+			</attributes>
+		</link>
+		<link id="13_12" from="13" to="12" length="3000.0" freespeed="16.666666666666668" capacity="25900.20064" permlanes="13.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">13-&gt;12</attribute>
+			</attributes>
+		</link>
+		<link id="13_24" from="13" to="24" length="4000.0" freespeed="16.666666666666668" capacity="5091.256152" permlanes="3.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">13-&gt;24</attribute>
+			</attributes>
+		</link>
+		<link id="14_11" from="14" to="11" length="4000.0" freespeed="16.666666666666668" capacity="4876.508287" permlanes="2.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">14-&gt;11</attribute>
+			</attributes>
+		</link>
+		<link id="14_15" from="14" to="15" length="5000.0" freespeed="16.666666666666668" capacity="5127.526119" permlanes="3.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">14-&gt;15</attribute>
+			</attributes>
+		</link>
+		<link id="14_23" from="14" to="23" length="4000.0" freespeed="16.666666666666668" capacity="4924.790605" permlanes="2.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">14-&gt;23</attribute>
+			</attributes>
+		</link>
+		<link id="15_10" from="15" to="10" length="6000.0" freespeed="16.666666666666668" capacity="13512.00155" permlanes="7.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">15-&gt;10</attribute>
+			</attributes>
+		</link>
+		<link id="15_14" from="15" to="14" length="5000.0" freespeed="16.666666666666668" capacity="5127.526119" permlanes="3.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">15-&gt;14</attribute>
+			</attributes>
+		</link>
+		<link id="15_19" from="15" to="19" length="3000.0" freespeed="16.666666666666668" capacity="14564.75315" permlanes="7.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">15-&gt;19</attribute>
+			</attributes>
+		</link>
+		<link id="15_22" from="15" to="22" length="3000.0" freespeed="16.666666666666668" capacity="9599.180565" permlanes="5.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">15-&gt;22</attribute>
+			</attributes>
+		</link>
+		<link id="16_10" from="16" to="10" length="4000.0" freespeed="16.666666666666668" capacity="4854.917717" permlanes="2.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">16-&gt;10</attribute>
+			</attributes>
+		</link>
+		<link id="16_17" from="16" to="17" length="2000.0" freespeed="16.666666666666668" capacity="5229.910063" permlanes="3.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">16-&gt;17</attribute>
+			</attributes>
+		</link>
+		<link id="16_18" from="16" to="18" length="3000.0" freespeed="16.666666666666668" capacity="19679.89671" permlanes="10.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">16-&gt;18</attribute>
+			</attributes>
+		</link>
+		<link id="16_8" from="16" to="8" length="5000.0" freespeed="16.666666666666668" capacity="5045.822583" permlanes="3.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">16-&gt;8</attribute>
+			</attributes>
+		</link>
+		<link id="17_10" from="17" to="10" length="8000.0" freespeed="16.666666666666668" capacity="4993.510694" permlanes="2.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">17-&gt;10</attribute>
+			</attributes>
+		</link>
+		<link id="17_16" from="17" to="16" length="2000.0" freespeed="16.666666666666668" capacity="5229.910063" permlanes="3.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">17-&gt;16</attribute>
+			</attributes>
+		</link>
+		<link id="17_19" from="17" to="19" length="2000.0" freespeed="16.666666666666668" capacity="4823.950831" permlanes="2.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">17-&gt;19</attribute>
+			</attributes>
+		</link>
+		<link id="18_16" from="18" to="16" length="3000.0" freespeed="16.666666666666668" capacity="19679.89671" permlanes="10.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">18-&gt;16</attribute>
+			</attributes>
+		</link>
+		<link id="18_20" from="18" to="20" length="4000.0" freespeed="16.666666666666668" capacity="23403.47319" permlanes="12.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">18-&gt;20</attribute>
+			</attributes>
+		</link>
+		<link id="18_7" from="18" to="7" length="2000.0" freespeed="16.666666666666668" capacity="23403.47319" permlanes="12.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">18-&gt;7</attribute>
+			</attributes>
+		</link>
+		<link id="19_15" from="19" to="15" length="3000.0" freespeed="16.666666666666668" capacity="14564.75315" permlanes="7.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">19-&gt;15</attribute>
+			</attributes>
+		</link>
+		<link id="19_17" from="19" to="17" length="2000.0" freespeed="16.666666666666668" capacity="4823.950831" permlanes="2.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">19-&gt;17</attribute>
+			</attributes>
+		</link>
+		<link id="19_20" from="19" to="20" length="4000.0" freespeed="16.666666666666668" capacity="5002.607563" permlanes="3.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">19-&gt;20</attribute>
+			</attributes>
+		</link>
+		<link id="1_2" from="1" to="2" length="6000.0" freespeed="16.666666666666668" capacity="25900.20064" permlanes="13.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">1-&gt;2</attribute>
+			</attributes>
+		</link>
+		<link id="1_3" from="1" to="3" length="4000.0" freespeed="16.666666666666668" capacity="23403.47319" permlanes="12.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">1-&gt;3</attribute>
+			</attributes>
+		</link>
+		<link id="20_18" from="20" to="18" length="4000.0" freespeed="16.666666666666668" capacity="23403.47319" permlanes="12.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">20-&gt;18</attribute>
+			</attributes>
+		</link>
+		<link id="20_19" from="20" to="19" length="4000.0" freespeed="16.666666666666668" capacity="5002.607563" permlanes="3.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">20-&gt;19</attribute>
+			</attributes>
+		</link>
+		<link id="20_21" from="20" to="21" length="6000.0" freespeed="16.666666666666668" capacity="5059.91234" permlanes="3.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">20-&gt;21</attribute>
+			</attributes>
+		</link>
+		<link id="20_22" from="20" to="22" length="5000.0" freespeed="16.666666666666668" capacity="5075.697193" permlanes="3.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">20-&gt;22</attribute>
+			</attributes>
+		</link>
+		<link id="21_20" from="21" to="20" length="6000.0" freespeed="16.666666666666668" capacity="5059.91234" permlanes="3.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">21-&gt;20</attribute>
+			</attributes>
+		</link>
+		<link id="21_22" from="21" to="22" length="2000.0" freespeed="16.666666666666668" capacity="5229.910063" permlanes="3.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">21-&gt;22</attribute>
+			</attributes>
+		</link>
+		<link id="21_24" from="21" to="24" length="3000.0" freespeed="16.666666666666668" capacity="4885.357564" permlanes="2.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">21-&gt;24</attribute>
+			</attributes>
+		</link>
+		<link id="22_15" from="22" to="15" length="3000.0" freespeed="16.666666666666668" capacity="9599.180565" permlanes="5.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">22-&gt;15</attribute>
+			</attributes>
+		</link>
+		<link id="22_20" from="22" to="20" length="5000.0" freespeed="16.666666666666668" capacity="5075.697193" permlanes="3.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">22-&gt;20</attribute>
+			</attributes>
+		</link>
+		<link id="22_21" from="22" to="21" length="2000.0" freespeed="16.666666666666668" capacity="5229.910063" permlanes="3.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">22-&gt;21</attribute>
+			</attributes>
+		</link>
+		<link id="22_23" from="22" to="23" length="4000.0" freespeed="16.666666666666668" capacity="5000.0" permlanes="3.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">22-&gt;23</attribute>
+			</attributes>
+		</link>
+		<link id="23_14" from="23" to="14" length="4000.0" freespeed="16.666666666666668" capacity="4924.790605" permlanes="2.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">23-&gt;14</attribute>
+			</attributes>
+		</link>
+		<link id="23_22" from="23" to="22" length="4000.0" freespeed="16.666666666666668" capacity="5000.0" permlanes="3.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">23-&gt;22</attribute>
+			</attributes>
+		</link>
+		<link id="23_24" from="23" to="24" length="2000.0" freespeed="16.666666666666668" capacity="5078.508436" permlanes="3.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">23-&gt;24</attribute>
+			</attributes>
+		</link>
+		<link id="24_13" from="24" to="13" length="4000.0" freespeed="16.666666666666668" capacity="5091.256152" permlanes="3.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">24-&gt;13</attribute>
+			</attributes>
+		</link>
+		<link id="24_21" from="24" to="21" length="3000.0" freespeed="16.666666666666668" capacity="4885.357564" permlanes="2.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">24-&gt;21</attribute>
+			</attributes>
+		</link>
+		<link id="24_23" from="24" to="23" length="2000.0" freespeed="16.666666666666668" capacity="5078.508436" permlanes="3.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">24-&gt;23</attribute>
+			</attributes>
+		</link>
+		<link id="2_1" from="2" to="1" length="6000.0" freespeed="16.666666666666668" capacity="25900.20064" permlanes="13.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">2-&gt;1</attribute>
+			</attributes>
+		</link>
+		<link id="2_6" from="2" to="6" length="5000.0" freespeed="16.666666666666668" capacity="4958.180928" permlanes="2.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">2-&gt;6</attribute>
+			</attributes>
+		</link>
+		<link id="3_1" from="3" to="1" length="4000.0" freespeed="16.666666666666668" capacity="23403.47319" permlanes="12.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">3-&gt;1</attribute>
+			</attributes>
+		</link>
+		<link id="3_12" from="3" to="12" length="4000.0" freespeed="16.666666666666668" capacity="23403.47319" permlanes="12.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">3-&gt;12</attribute>
+			</attributes>
+		</link>
+		<link id="3_4" from="3" to="4" length="4000.0" freespeed="16.666666666666668" capacity="17110.52372" permlanes="9.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">3-&gt;4</attribute>
+			</attributes>
+		</link>
+		<link id="4_11" from="4" to="11" length="6000.0" freespeed="16.666666666666668" capacity="4908.82673" permlanes="2.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">4-&gt;11</attribute>
+			</attributes>
+		</link>
+		<link id="4_3" from="4" to="3" length="4000.0" freespeed="16.666666666666668" capacity="17110.52372" permlanes="9.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">4-&gt;3</attribute>
+			</attributes>
+		</link>
+		<link id="4_5" from="4" to="5" length="2000.0" freespeed="16.666666666666668" capacity="17782.7941" permlanes="9.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">4-&gt;5</attribute>
+			</attributes>
+		</link>
+		<link id="5_4" from="5" to="4" length="2000.0" freespeed="16.666666666666668" capacity="17782.7941" permlanes="9.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">5-&gt;4</attribute>
+			</attributes>
+		</link>
+		<link id="5_6" from="5" to="6" length="4000.0" freespeed="16.666666666666668" capacity="4947.995469" permlanes="2.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">5-&gt;6</attribute>
+			</attributes>
+		</link>
+		<link id="5_9" from="5" to="9" length="5000.0" freespeed="16.666666666666668" capacity="10000.0" permlanes="5.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">5-&gt;9</attribute>
+			</attributes>
+		</link>
+		<link id="6_2" from="6" to="2" length="5000.0" freespeed="16.666666666666668" capacity="4958.180928" permlanes="2.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">6-&gt;2</attribute>
+			</attributes>
+		</link>
+		<link id="6_5" from="6" to="5" length="4000.0" freespeed="16.666666666666668" capacity="4947.995469" permlanes="2.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">6-&gt;5</attribute>
+			</attributes>
+		</link>
+		<link id="6_8" from="6" to="8" length="2000.0" freespeed="16.666666666666668" capacity="4898.587646" permlanes="2.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">6-&gt;8</attribute>
+			</attributes>
+		</link>
+		<link id="7_18" from="7" to="18" length="2000.0" freespeed="16.666666666666668" capacity="23403.47319" permlanes="12.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">7-&gt;18</attribute>
+			</attributes>
+		</link>
+		<link id="7_8" from="7" to="8" length="3000.0" freespeed="16.666666666666668" capacity="7841.81131" permlanes="4.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">7-&gt;8</attribute>
+			</attributes>
+		</link>
+		<link id="8_16" from="8" to="16" length="5000.0" freespeed="16.666666666666668" capacity="5045.822583" permlanes="3.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">8-&gt;16</attribute>
+			</attributes>
+		</link>
+		<link id="8_6" from="8" to="6" length="2000.0" freespeed="16.666666666666668" capacity="4898.587646" permlanes="2.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">8-&gt;6</attribute>
+			</attributes>
+		</link>
+		<link id="8_7" from="8" to="7" length="3000.0" freespeed="16.666666666666668" capacity="7841.81131" permlanes="4.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">8-&gt;7</attribute>
+			</attributes>
+		</link>
+		<link id="8_9" from="8" to="9" length="10000.0" freespeed="16.666666666666668" capacity="5050.193156" permlanes="3.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">8-&gt;9</attribute>
+			</attributes>
+		</link>
+		<link id="9_10" from="9" to="10" length="3000.0" freespeed="16.666666666666668" capacity="13915.78842" permlanes="7.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">9-&gt;10</attribute>
+			</attributes>
+		</link>
+		<link id="9_5" from="9" to="5" length="5000.0" freespeed="16.666666666666668" capacity="10000.0" permlanes="5.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">9-&gt;5</attribute>
+			</attributes>
+		</link>
+		<link id="9_8" from="9" to="8" length="10000.0" freespeed="16.666666666666668" capacity="5050.193156" permlanes="3.0" oneway="1" modes="car" >
+			<attributes>
+				<attribute name="origid" class="java.lang.String">9-&gt;8</attribute>
+			</attributes>
+		</link>
+	</links>
+
+<!-- ====================================================================== -->
+
+</network>

@@ -1,35 +1,45 @@
 package org.matsim.project;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
+import org.matsim.api.core.v01.network.Link;
+import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
+import org.matsim.api.core.v01.population.Plan;
+import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.vehicles.VehicleType;
 import org.matsim.vehicles.VehicleUtils;
 import org.matsim.vehicles.Vehicles;
 import org.matsim.vehicles.VehiclesFactory;
 
 /**
- * Phase 1 (Option A, private AVs): AVs are privately owned cars whose network
- * effect is a changed {@link VehicleType#setFlowEfficiencyFactor(double)
- * flow-efficiency factor}.
+ * Phase 1 (Option A, private AVs), extended with a separate AV mode:
+ * AVs are privately owned cars with a changed
+ * {@link VehicleType#setFlowEfficiencyFactor(double) flow-efficiency factor}
+ * <strong>and</strong> their own network mode ({@code av}).
  *
- * <p>Creates two vehicle types ({@code car}, {@code av}) and tags every person
- * with the {@link AvAssignment#IS_AV_ATTRIBUTE} attribute plus a
- * {@code car}-mode to vehicle-type mapping. The actual vehicle instances are
- * created by MATSim's {@code PrepareForSim} from that mapping (this is the
- * mechanism its {@code modeVehicleTypesFromVehiclesData} source consumes).
- * The QSim must use that source (set in {@link RunAvEarthquake#prepareConfig})
- * so these per-person vehicle types are used.
+ * <p>Every AV person travels on {@code av}-mode legs (rewritten from
+ * {@code car} at setup) with an {@code av} vehicle type; conventional agents
+ * stay on {@code car}. The split lets routing perceive the network differently
+ * per mode (see {@link AvRouting}): AVs replan on observed (post-quake)
+ * travel times while conventional drivers route damage-blind on free-flow
+ * times. Link modes, QSim main modes and scoring params are wired at runtime
+ * so no scenario fixture needs regenerating.
  */
 public final class AvSetup {
 
 	private static final Logger log = LogManager.getLogger(AvSetup.class);
 
 	public static final String CAR_MODE = "car";
+
+	/** Separate AV network mode (vision: AVs plan on the live network). */
+	public static final String AV_MODE = "av";
 
 	public static final Id<VehicleType> CAR_TYPE_ID = Id.create("car", VehicleType.class);
 	public static final Id<VehicleType> AV_TYPE_ID = Id.create("av", VehicleType.class);
@@ -67,9 +77,9 @@ public final class AvSetup {
 		if (avType == null) {
 			avType = factory.createVehicleType(AV_TYPE_ID);
 			avType.setDescription("private autonomous car");
-			// AVs drive on the car network; MATSim requires an explicit network mode
-			// for every non-"car" vehicle type.
-			avType.setNetworkMode(CAR_MODE);
+			// AVs drive on their own network mode so routing can treat them
+			// differently from conventional traffic (see AvRouting).
+			avType.setNetworkMode(AV_MODE);
 			avType.setPcuEquivalents(1.0);
 			avType.setFlowEfficiencyFactor(avFlowEfficiencyFactor);
 			vehicles.addVehicleType(avType);
@@ -77,12 +87,33 @@ public final class AvSetup {
 			avType.setFlowEfficiencyFactor(avFlowEfficiencyFactor);
 		}
 
+		// The av mode must be allowed on every link (runtime wiring; fixtures stay untouched).
+		for (Link link : scenario.getNetwork().getLinks().values()) {
+			if (!link.getAllowedModes().contains(AV_MODE)) {
+				Set<String> modes = new HashSet<>(link.getAllowedModes());
+				modes.add(AV_MODE);
+				link.setAllowedModes(modes);
+			}
+		}
+
 		int avCount = 0;
 		for (Person person : scenario.getPopulation().getPersons().values()) {
 			boolean av = AvAssignment.isAv(person.getId(), avShare, seed);
 			person.getAttributes().putAttribute(AvAssignment.IS_AV_ATTRIBUTE, av);
-			VehicleUtils.insertVehicleTypesIntoPersonAttributes(person,
-					Map.of(CAR_MODE, av ? AV_TYPE_ID : CAR_TYPE_ID));
+			if (av) {
+				for (Plan plan : person.getPlans()) {
+					for (PlanElement element : plan.getPlanElements()) {
+						if (element instanceof Leg leg && leg.getMode().equals(CAR_MODE)) {
+							leg.setMode(AV_MODE);
+						}
+					}
+				}
+				VehicleUtils.insertVehicleTypesIntoPersonAttributes(person,
+						Map.of(AV_MODE, AV_TYPE_ID));
+			} else {
+				VehicleUtils.insertVehicleTypesIntoPersonAttributes(person,
+						Map.of(CAR_MODE, CAR_TYPE_ID));
+			}
 
 			if (av) avCount++;
 		}

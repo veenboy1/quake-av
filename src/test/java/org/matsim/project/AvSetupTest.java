@@ -25,8 +25,15 @@ public class AvSetupTest {
 		return ScenarioUtils.loadScenario(config);
 	}
 
-	private static Id<VehicleType> mappedType(Scenario scenario, Person person) {
-		return VehicleUtils.getVehicleTypes(person).get(AvSetup.CAR_MODE);
+	private static Id<VehicleType> mappedType(Scenario scenario, Person person, String mode) {
+		return VehicleUtils.getVehicleTypes(person).get(mode);
+	}
+
+	private static boolean allLegsHaveMode(Person person, String mode) {
+		return person.getSelectedPlan().getPlanElements().stream()
+				.filter(e -> e instanceof org.matsim.api.core.v01.population.Leg)
+				.map(e -> (org.matsim.api.core.v01.population.Leg) e)
+				.allMatch(leg -> leg.getMode().equals(mode));
 	}
 
 	@Test
@@ -37,7 +44,8 @@ public class AvSetupTest {
 		assertEquals(0, avCount);
 		for (Person person : scenario.getPopulation().getPersons().values()) {
 			assertEquals(Boolean.FALSE, person.getAttributes().getAttribute(AvAssignment.IS_AV_ATTRIBUTE));
-			assertEquals(AvSetup.CAR_TYPE_ID, mappedType(scenario, person));
+			assertEquals(AvSetup.CAR_TYPE_ID, mappedType(scenario, person, AvSetup.CAR_MODE));
+			assertTrue(allLegsHaveMode(person, AvSetup.CAR_MODE));
 		}
 	}
 
@@ -50,10 +58,15 @@ public class AvSetupTest {
 		VehicleType avType = scenario.getVehicles().getVehicleTypes().get(AvSetup.AV_TYPE_ID);
 		assertEquals(2.0, avType.getFlowEfficiencyFactor(), 1e-9);
 		assertEquals(1.0, avType.getPcuEquivalents(), 1e-9);
-		assertEquals(AvSetup.CAR_MODE, avType.getNetworkMode());
+		assertEquals(AvSetup.AV_MODE, avType.getNetworkMode());
 		for (Person person : scenario.getPopulation().getPersons().values()) {
 			assertEquals(Boolean.TRUE, person.getAttributes().getAttribute(AvAssignment.IS_AV_ATTRIBUTE));
-			assertEquals(AvSetup.AV_TYPE_ID, mappedType(scenario, person));
+			assertEquals(AvSetup.AV_TYPE_ID, mappedType(scenario, person, AvSetup.AV_MODE));
+			assertTrue(allLegsHaveMode(person, AvSetup.AV_MODE),
+					"AV legs must use the av mode for " + person.getId());
+		}
+		for (var link : scenario.getNetwork().getLinks().values()) {
+			assertTrue(link.getAllowedModes().contains(AvSetup.AV_MODE));
 		}
 	}
 
@@ -70,7 +83,10 @@ public class AvSetupTest {
 					(Boolean) person.getAttributes().getAttribute(AvAssignment.IS_AV_ATTRIBUTE),
 					"isAV mismatch for " + person.getId());
 			assertEquals(expectedAv ? AvSetup.AV_TYPE_ID : AvSetup.CAR_TYPE_ID,
-					mappedType(scenario, person), "type mapping mismatch for " + person.getId());
+					mappedType(scenario, person, expectedAv ? AvSetup.AV_MODE : AvSetup.CAR_MODE),
+					"type mapping mismatch for " + person.getId());
+			assertTrue(allLegsHaveMode(person, expectedAv ? AvSetup.AV_MODE : AvSetup.CAR_MODE),
+					"leg mode mismatch for " + person.getId());
 		}
 		assertEquals(expected, avCount);
 		assertTrue(avCount > 0 && avCount < 100, "Expected a real mix, was " + avCount);

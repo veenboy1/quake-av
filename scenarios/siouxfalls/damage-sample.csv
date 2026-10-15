@@ -1,0 +1,5 @@
+link_id,damage_state,freespeed_factor,capacity_factor,closed
+10_11,moderate,0.5,0.5,false
+11_10,moderate,0.5,0.5,false
+8_9,severe,,,true
+9_8,moderate,0.5,0.5,false
