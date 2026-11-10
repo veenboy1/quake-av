@@ -39,7 +39,7 @@ public class RunAvEarthquakeAvTest {
 		Vehicles vehicles = readAllVehicles(outputDir);
 		assertEquals(100, vehicles.getVehicles().size());
 		for (Vehicle vehicle : vehicles.getVehicles().values()) {
-			assertEquals(AvSetup.AV_TYPE_ID, vehicle.getType().getId(),
+			assertEquals(AvSetup.avTypeId(), vehicle.getType().getId(),
 					"Vehicle " + vehicle.getId() + " should be type av at 100% share");
 		}
 	}
@@ -53,10 +53,10 @@ public class RunAvEarthquakeAvTest {
 		assertTrue(Files.exists(Paths.get(outputDir, "output_events.xml.zst")));
 		Vehicles vehicles = readAllVehicles(outputDir);
 		long avCount = vehicles.getVehicles().values().stream()
-				.filter(v -> v.getType().getId().equals(AvSetup.AV_TYPE_ID))
+				.filter(v -> v.getType().getId().equals(AvSetup.avTypeId()))
 				.count();
 		long carCount = vehicles.getVehicles().values().stream()
-				.filter(v -> v.getType().getId().equals(AvSetup.CAR_TYPE_ID))
+				.filter(v -> v.getType().getId().equals(AvSetup.carTypeId()))
 				.count();
 		assertTrue(avCount > 0 && carCount > 0,
 				"Expected a mix of av and car vehicles, was av=" + avCount + " car=" + carCount);

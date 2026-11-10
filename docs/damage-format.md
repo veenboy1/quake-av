@@ -50,3 +50,24 @@ usage 89 → 0 with arrivals identical to baseline and zero stuck events.
 - Run class: `RunAvEarthquake --damageFile <csv> --tQuake <seconds>`
   attaches events to the loaded scenario's network before the Controler runs.
   No config change needed; ideal for the Phase 5 sweep.
+
+## Applicability to San Francisco
+
+The contract is network-agnostic, but the **link IDs are not**. For
+`scenarios/Simulation_SF/`:
+
+- Every `link_id` must be a real Bay Area MATSim link ID from
+  `san_francisco_network.xml.gz`; the converter fails fast on unknown IDs.
+- The Sioux Falls `damage-sample.csv` cannot be reused — its IDs (`8_9`,
+  `10_11`, ...) do not exist in the SF network.
+- No SF damage file exists yet. Generate one with SF link IDs (e.g. from an
+  external shake-map/link-fragility model) before running an SF quake.
+- Target **through-links** for closure tests, not destination links: arrival
+  happens on link entry, so closing a final link looks vacuous.
+- At SF scale an iteration is much heavier than Sioux Falls (~16 min / ~0.8 GB
+  for iteration 0; see `docs/san-francisco-network.md`). Validate a damage file
+  on a short `--lastIteration 0` run first.
+- Redirect (`--redirect`) additionally needs an SF hospital file; the default
+  `--hospitals` path points at the Sioux Falls file and will fail fast.
+- Keep `flowCapacityFactor = storageCapacityFactor = 0.01`; damage factors are
+  applied on top of the already-scaled capacities.

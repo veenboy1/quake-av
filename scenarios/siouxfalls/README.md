@@ -4,6 +4,13 @@ Built from the raw TNTP data in `extra-data/SiouxFalls/` (gitignored, local only
 Raw source: `SiouxFalls_net.tntp` (76 links) + `SiouxFalls_node.tntp` (24 lon/lat nodes),
 canonical TNTP benchmark (24 zones, 360,600 trips total, BPR B=0.15/p=4).
 
+> **Scale:** this is the **small benchmark** (3,608 persons / 76 links,
+> ~40 s per iteration). The **large-network verification case** is the eqasim
+> San Francisco 1 % scenario in `scenarios/Simulation_SF/` (75,228 persons /
+> 656,557 links, ~16.5 min and ~9.3 GB RAM for one iteration). See
+> [`../Simulation_SF/README.md`](../Simulation_SF/README.md) and
+> [`../../docs/san-francisco-network.md`](../../docs/san-francisco-network.md).
+
 ## How `network.xml` was built
 
 ```
@@ -60,11 +67,12 @@ storageCapacityFactor = 0.01` (qsim module), `h`/`w` scoring plus a `hospital`
 activity type (unused until Phase 4), equil-style replanning
 (BestScore 0.9 / ReRoute 0.1), 10 iterations. Run it:
 
-```
-java -jar matsim-example-project-0.0.1-SNAPSHOT.jar run --config scenarios/siouxfalls/config.xml
-# or via the run class:
-./mvnw compile exec:java -Dexec.mainClass=org.matsim.project.RunAvEarthquake \
-  -Dexec.args="--config scenarios/siouxfalls/config.xml --output /tmp/sf-baseline --lastIteration 10"
+```sh
+JAR=matsim-example-project-0.0.1-SNAPSHOT.jar
+# Use java -cp, not java -jar (the jar manifest starts the upstream template class):
+java -cp $JAR org.matsim.project.RunAvEarthquake \
+  --config scenarios/siouxfalls/config.xml \
+  --output /tmp/sf-baseline --lastIteration 10
 ```
 
 Measured 2026-10-13: 1 iteration, 3,608 agents, ~39 s wall (incl. JVM startup)

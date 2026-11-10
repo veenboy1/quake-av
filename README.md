@@ -21,13 +21,44 @@ outcomes per penetration rate.
 
 ---
 
+## Changes relative to the upstream MATSim example project
+
+This repository started from
+[`matsim-org/matsim-example-project`](https://github.com/matsim-org/matsim-example-project)
+(MATSim 2026.0 / Java 25). The upstream template run classes are still present;
+all project work is additive.
+
+| Added / changed | Where | What it does |
+|---|---|---|
+| Custom run class + CLI | `src/main/java/org/matsim/project/RunAvEarthquake.java` | Loads any scenario and exposes `--config`, `--output`, `--lastIteration`, AV, damage, redirect and hospital flags. |
+| Private AVs | `AvAssignment.java`, `AvSetup.java` | Seeded nested AV share, `car`/`av` vehicle types, `av` mode and links wired at runtime. |
+| AV-vs-conventional routing | `AvRouting.java` | AVs route on observed (post-quake) times; conventional cars route on a pre-quake snapshot in damage runs. |
+| Earthquake damage | `DamageToNetworkChangeEvents.java` | Per-link CSV → `NetworkChangeEvent`s at `t_quake` (effective closures, not absolute zero). |
+| Mid-day destination redirect | `QuakeRedirector.java`, `RedirectConfig.java`, `RedirectLogger.java` | Seeded home/hospital/stay/random reassignment at `t_quake`, with a per-run CSV log. |
+| Sioux Falls build pipeline | `SiouxFallsNetworkConverter.java`, `SiouxFallsPopulationGenerator.java` | TNTP network → MATSim network; OD matrix → synthetic 1 % population + hospitals. |
+| Scenarios | `scenarios/equil/`, `scenarios/siouxfalls/`, `scenarios/Simulation_SF/` | Toy smoke test, 76-link benchmark, and the large eqasim San Francisco 1 % scenario. |
+| Sweep + analysis | `scripts/run_sweep.sh`, `scripts/analyze.py`, `scripts/sweep_compare.py`, `scripts/analysis.ipynb` | 6 AV shares × 5 seeds × {quake, no-quake}, plus metrics/plots. |
+| Documentation | `docs/` | Damage CSV contract, sweep design, SF network reference, verification handoff. |
+| Tests | `src/test/java/org/matsim/project/` | **40 tests**, including end-to-end runs and SF regressions. |
+
+The original eqasim config and input files are preserved unchanged. See
+[`scenarios/Simulation_SF/README.md`](scenarios/Simulation_SF/README.md) for the
+migration and [`docs/san-francisco-network.md`](docs/san-francisco-network.md)
+for the full network/population reference.
+
+For a verification checklist, see
+[`docs/verification-handoff.md`](docs/verification-handoff.md).
+
+---
+
 ## Prerequisites
 
 - **Java 25** (e.g. Temurin 25.0.4.1+; check with `java -version`). Maven is
   **included** via the `./mvnw` wrapper — no separate install needed.
 - **Python 3 + packages** (analysis only): `python3 -m pip install --user pandas matplotlib zstandard jupyter nbclient ipykernel`.
-- ~2 GB free disk (the built jar is ~220 MB; a 60-cell sweep writes tens of GB
-  to `output/`, which is git-ignored).
+- ~2 GB free disk for the Sioux Falls work (the built jar is ~220 MB; a 60-cell
+  sweep writes tens of GB to `output/`, which is git-ignored). A San Francisco
+  iteration writes ~0.8 GB; budget **~10 GB RAM** and several GB of disk for it.
 - First build downloads dependencies; allow several minutes on a fresh machine.
 
 Clone and work on the `av-earthquake` branch (all project work lives there).
@@ -37,7 +68,7 @@ Clone and work on the `av-earthquake` branch (all project work lives there).
 ## Quickstart
 
 ```sh
-# 1. Build once (~2-4 min first time; skips the 39-test suite for speed)
+# 1. Build once (~2-4 min first time; skips the 40-test suite for speed)
 ./mvnw -q -DskipTests package
 
 # 2. Run the 1% Sioux Falls baseline, 1 iteration (~40 s on a laptop)
@@ -52,7 +83,7 @@ ls /tmp/sf-baseline/   # output_events.xml.zst, output_trips.csv.zst, ...
 > `java -jar ... run ...` — the latter launches the upstream template class,
 > not this project's run class.
 
-Run the full test suite (39 tests) with `./mvnw test`.
+Run the full test suite (40 tests) with `./mvnw test`.
 
 ---
 
@@ -132,16 +163,68 @@ python3 -m pip install --user pandas matplotlib zstandard jupyter nbclient ipyke
 
 ---
 
+## San Francisco scenario (large network)
+
+`scenarios/Simulation_SF/` contains an **eqasim San Francisco 1 % sample**
+(75,228 persons, 656,557 links, 841 transit lines) and a MATSim 2026 config,
+`san_francisco_config-2026.xml`. The original eqasim config and `.xml.gz` inputs
+are kept unchanged. This is the **large-network verification case**; Sioux
+Falls remains the fast benchmark.
+
+Plan B is deliberate: the eqasim input data is run through this repository's
+AV/earthquake runner with **eqasim mode choice switched off**. Mode shares are
+fixed by the input plans; only re-routing is active.
+
+```sh
+JAR=matsim-example-project-0.0.1-SNAPSHOT.jar
+
+# Baseline, one iteration (~16 min, ~10 GB RAM)
+java -Xmx10g -cp $JAR org.matsim.project.RunAvEarthquake \
+  --config scenarios/Simulation_SF/san_francisco_config-2026.xml \
+  --output output-sf-1pct/baseline --lastIteration 0
+
+# 50 % private AVs, one iteration
+java -Xmx10g -cp $JAR org.matsim.project.RunAvEarthquake \
+  --config scenarios/Simulation_SF/san_francisco_config-2026.xml \
+  --output output-sf-1pct/av50 --lastIteration 0 \
+  --avShare 0.5 --avSeed 42
+```
+
+Expected for the 50 % AV smoke run: exit 0, **37,787 / 75,228** AV persons,
+`SwissRailRaptor` preparation ~12–14 min, mobsim ~2 min, ~9.3 GB peak RAM,
+~0.8 GB output. Mode shares over 294,120 trips: `av` 29.3 %, `car` 29.2 %,
+`car_passenger` 21.7 %, `pt` 3.7 %, `walk` 16.2 %.
+
+Key caveats:
+
+- Keep `flowCapacityFactor = storageCapacityFactor = 0.01`; the population is a
+  1 % sample. Raising them without a full population removes all congestion.
+- No SF damage or hospital CSV exists yet. `--damageFile` needs SF link IDs, and
+  `--redirect` will fail fast because the default `--hospitals` file is Sioux
+  Falls.
+- `AvAssignment` ignores `carAvailability`/`hasLicense`; AVs are added only to
+  links that already allow `car`; `truck` is not represented (no truck links).
+
+Full details:
+[`scenarios/Simulation_SF/README.md`](scenarios/Simulation_SF/README.md) and
+[`docs/san-francisco-network.md`](docs/san-francisco-network.md).
+
+---
+
 ## Key concepts for outsiders
 
 - **Scenarios.** `scenarios/equil/` is a tiny 100-agent toy for fast smoke
-  tests. `scenarios/siouxfalls/` is the real benchmark: 24-node/76-link
+  tests. `scenarios/siouxfalls/` is the small benchmark: 24-node/76-link
   network, ~3,600-agent synthetic population (1% of the 360,600-trip OD matrix),
   3 hospital sites, ready-made config + sample damage file. Details in
-  `scenarios/siouxfalls/README.md`.
+  `scenarios/siouxfalls/README.md`. `scenarios/Simulation_SF/` is the large
+  eqasim San Francisco 1 % scenario: 75,228 persons, 656,557 links, 841 transit
+  lines. Details in `scenarios/Simulation_SF/README.md` and
+  `docs/san-francisco-network.md`.
 - **Sample-rate rule.** Population fraction and network capacity must match:
   regenerating at `--sample X` requires `flowCapacityFactor =
-  storageCapacityFactor = X` in the config. Defaults are 0.01 throughout.
+  storageCapacityFactor = X` in the config. Defaults are 0.01 throughout,
+  including San Francisco (do not raise SF's factors without a full population).
 - **AV vs conventional (the core distinction).** AV persons drive `av`-mode legs
   routed on *observed* post-quake travel times; conventional drivers route on a
   frozen *pre-quake* snapshot (damage-blind). Both share the roads; AVs also
@@ -166,13 +249,15 @@ src/main/java/org/matsim/project/  RunAvEarthquake, AvAssignment, AvSetup, AvRou
                                    SiouxFallsNetworkConverter, SiouxFallsPopulationGenerator,
                                    DamageToNetworkChangeEvents, QuakeRedirector,
                                    RedirectConfig, RedirectLogger
-src/test/...                       39 tests (one class per component + end-to-end runs)
+src/test/...                       40 tests (one class per component + end-to-end runs)
 scenarios/equil/                   100-agent smoke-test scenario
 scenarios/siouxfalls/              network, population, hospitals, config, damage sample + README
-docs/                              damage-format.md (CSV contract), sweep-regime.md (design brief)
+scenarios/Simulation_SF/           eqasim SF 1% input data + MATSim 2026 config + README
+docs/                              damage-format.md (CSV contract), sweep-regime.md (design brief),
+                                   san-francisco-network.md (SF data reference), verification-handoff.md
 scripts/                           run_sweep.sh, analyze.py, analysis.ipynb, sweep_compare.py
 output/                            run outputs (git-ignored)
-agent-helpers/                     working plan + status (git-ignored; start here to contribute)
+agent-helpers/                     long-form plan + decision log + session history (git-ignored)
 ```
 
 ## Troubleshooting
@@ -183,8 +268,11 @@ agent-helpers/                     working plan + status (git-ignored; start her
   fetches need network; transient `Read timed out` failures usually pass on retry.
 - **A run never finishes:** check it isn't a true zero-capacity closure (see
   Effective closure above); otherwise inspect `logfileWarningsErrors.log`.
-- **Out of disk:** one 10-iteration 1% cell is a few hundred MB; the full sweep
-  is tens of GB. Point `--output`/`--outdir` at a big volume.
+- **Out of disk:** one 10-iteration 1% Sioux Falls cell is a few hundred MB; the
+  full sweep is tens of GB. Point `--output`/`--outdir` at a big volume. One San
+  Francisco iteration writes ~0.8 GB.
+- **San Francisco out-of-memory / very slow startup:** use `-Xmx10g` or more;
+  transit preparation (`SwissRailRaptor`) takes ~12–14 min per run, not a hang.
 
 ---
 

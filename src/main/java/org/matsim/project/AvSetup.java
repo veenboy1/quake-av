@@ -41,8 +41,20 @@ public final class AvSetup {
 	/** Separate AV network mode (vision: AVs plan on the live network). */
 	public static final String AV_MODE = "av";
 
-	public static final Id<VehicleType> CAR_TYPE_ID = Id.create("car", VehicleType.class);
-	public static final Id<VehicleType> AV_TYPE_ID = Id.create("av", VehicleType.class);
+	/**
+	 * Create the conventional-car type id on demand. MATSim's {@code IdMap}
+	 * indexes entries by {@link Id#index()}, and tests reset the global id
+	 * caches between runs; a static {@code Id} would then point at the wrong
+	 * slot. Create ids after the scenario has been loaded instead.
+	 */
+	public static Id<VehicleType> carTypeId() {
+		return Id.create(CAR_MODE, VehicleType.class);
+	}
+
+	/** Create the AV type id on demand (see {@link #carTypeId()}). */
+	public static Id<VehicleType> avTypeId() {
+		return Id.create(AV_MODE, VehicleType.class);
+	}
 
 	private AvSetup() {
 	}
@@ -63,9 +75,10 @@ public final class AvSetup {
 		Vehicles vehicles = scenario.getVehicles();
 		VehiclesFactory factory = vehicles.getFactory();
 
-		VehicleType carType = vehicles.getVehicleTypes().get(CAR_TYPE_ID);
+		Id<VehicleType> carTypeId = carTypeId();
+		VehicleType carType = vehicles.getVehicleTypes().get(carTypeId);
 		if (carType == null) {
-			carType = factory.createVehicleType(CAR_TYPE_ID);
+			carType = factory.createVehicleType(carTypeId);
 			carType.setDescription("conventional car");
 			carType.setNetworkMode(CAR_MODE);
 			carType.setPcuEquivalents(1.0);
@@ -73,9 +86,10 @@ public final class AvSetup {
 			vehicles.addVehicleType(carType);
 		}
 
-		VehicleType avType = vehicles.getVehicleTypes().get(AV_TYPE_ID);
+		Id<VehicleType> avTypeId = avTypeId();
+		VehicleType avType = vehicles.getVehicleTypes().get(avTypeId);
 		if (avType == null) {
-			avType = factory.createVehicleType(AV_TYPE_ID);
+			avType = factory.createVehicleType(avTypeId);
 			avType.setDescription("private autonomous car");
 			// AVs drive on their own network mode so routing can treat them
 			// differently from conventional traffic (see AvRouting).
@@ -87,9 +101,20 @@ public final class AvSetup {
 			avType.setFlowEfficiencyFactor(avFlowEfficiencyFactor);
 		}
 
-		// The av mode must be allowed on every link (runtime wiring; fixtures stay untouched).
+		// With qsim.vehiclesSource=modeVehicleTypesFromVehiclesData (set by
+		// RunAvEarthquake for AV runs), MATSim requires a vehicle type for every
+		// configured network/main mode, not just car and av. Scenarios such as
+		// San Francisco also route car_passenger (and sometimes truck) on the
+		// network, so provide fallback types when the input does not define them.
+		ensureVehicleTypesForConfiguredModes(scenario, vehicles, factory);
+
+		// AVs are cars: only add the av mode to links that already allow car.
+		// Adding it to every link (including rail/ferry/bus-only links) makes
+		// the av routing network contain disconnected components, and MATSim's
+		// NetworkRoutingProvider aborts with "Network for mode 'av' has
+		// unreachable links and nodes". Runtime wiring; fixtures stay untouched.
 		for (Link link : scenario.getNetwork().getLinks().values()) {
-			if (!link.getAllowedModes().contains(AV_MODE)) {
+			if (link.getAllowedModes().contains(CAR_MODE) && !link.getAllowedModes().contains(AV_MODE)) {
 				Set<String> modes = new HashSet<>(link.getAllowedModes());
 				modes.add(AV_MODE);
 				link.setAllowedModes(modes);
@@ -109,10 +134,10 @@ public final class AvSetup {
 					}
 				}
 				VehicleUtils.insertVehicleTypesIntoPersonAttributes(person,
-						Map.of(AV_MODE, AV_TYPE_ID));
+						Map.of(AV_MODE, avTypeId));
 			} else {
 				VehicleUtils.insertVehicleTypesIntoPersonAttributes(person,
-						Map.of(CAR_MODE, CAR_TYPE_ID));
+						Map.of(CAR_MODE, carTypeId));
 			}
 
 			if (av) avCount++;
@@ -121,5 +146,27 @@ public final class AvSetup {
 		log.info("AV setup: {}/{} persons AV (share={}, seed={}, avFlowEfficiencyFactor={})",
 				avCount, scenario.getPopulation().getPersons().size(), avShare, seed, avFlowEfficiencyFactor);
 		return avCount;
+	}
+
+	private static void ensureVehicleTypesForConfiguredModes(Scenario scenario, Vehicles vehicles,
+			VehiclesFactory factory) {
+		Set<String> modes = new HashSet<>(scenario.getConfig().routing().getNetworkModes());
+		modes.addAll(scenario.getConfig().qsim().getMainModes());
+		for (String mode : modes) {
+			if (mode == null || mode.isBlank()) {
+				continue;
+			}
+			Id<VehicleType> typeId = Id.create(mode, VehicleType.class);
+			if (vehicles.getVehicleTypes().containsKey(typeId)) {
+				continue;
+			}
+			VehicleType type = factory.createVehicleType(typeId);
+			type.setDescription("fallback vehicle type for network mode " + mode);
+			type.setNetworkMode(mode);
+			type.setPcuEquivalents(1.0);
+			type.setFlowEfficiencyFactor(1.0);
+			vehicles.addVehicleType(type);
+			log.info("Added fallback vehicle type for network mode '{}'", mode);
+		}
 	}
 }

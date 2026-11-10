@@ -22,6 +22,7 @@ hs_err_pid*
 
 /target/
 /output/
+/output-sf-1pct/
 /test/output/
 /bin/
 
